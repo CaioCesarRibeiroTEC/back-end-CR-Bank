@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         String   @id @default(uuid())
+  nome       String
+  email      String   @unique
+  senha_hash String
+  cpf        String   @unique
+  avatar     String?  @db.Text
+  criado_em  DateTime @default(now())
+  accounts   Account[]
+
+  @@map("users")
+}
+
+model Account {
+  id                   String        @id @default(uuid())
+  agencia              String
+  numero_conta         String        @unique
+  saldo                Decimal       @default(0.00)
+  user_id              String
+  user                 User          @relation(fields: [user_id], references: [id])
+  criado_em            DateTime      @default(now())
+  cartoes Card[]
+  transacoes_enviadas  Transaction[] @relation("ContaOrigem")
+  transacoes_recebidas Transaction[] @relation("ContaDestino")
+  
+  chaves_pix           ChavePix[]    
+}
+
+
+model ChavePix {
+  id        String   @id @default(uuid())
+  chave     String   @unique
+  tipo      String   // Ex: "CPF", "EMAIL", "ALEATORIA"
+  conta_id  String
+  conta     Account  @relation(fields: [conta_id], references: [id])
+  criado_em DateTime @default(now())
+}
+
+
+model Transaction {
+  id               String   @id @default(uuid())
+  conta_origem_id  String?  
+  conta_destino_id String?  
+  tipo             String   // "DEPOSITO", "SAQUE", "TRANSFERENCIA"
+  valor            Decimal  @db.Decimal(10, 2)
+  criado_em        DateTime @default(now())
+
+  conta_origem     Account? @relation("ContaOrigem", fields: [conta_origem_id], references: [id])
+  conta_destino    Account? @relation("ContaDestino", fields: [conta_destino_id], references: [id])
+
+  @@map("transactions")
+}
+
+model Card {
+  id              String   @id @default(uuid())
+  numero          String   @unique
+  nome_titular    String
+  validade        String   // Formato "MM/AA"
+  cvv             String
+  limite          Decimal  @default(1000.00)
+  is_ativo        Boolean  @default(true)
+  conta_id        String
+  conta           Account  @relation(fields: [conta_id], references: [id])
+  criado_em       DateTime @default(now())
+}
