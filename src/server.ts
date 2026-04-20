@@ -9,11 +9,12 @@ import { BotController } from './controllers/BotController';
 const app = express();
 
 // Configurações básicas
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 const PORT = process.env.PORT || 3333;;
 const server = http.createServer(app);
+
 
 
 // Exportamos o 'io' para que possa ser usado dentro dos Controllers (como no TransacaoController)
