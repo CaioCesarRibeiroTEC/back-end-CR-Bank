@@ -27,7 +27,7 @@ export class PixController {
   async listarChaves(request: Request, response: Response) {
     try {
       const chaves = await prisma.chavePix.findMany({
-        where: { conta_id: request.params.conta_id }
+        where: { conta_id: String(request.params.conta_id)}
       });
       return response.status(200).json(chaves);
     } catch (error) {

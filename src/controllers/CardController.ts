@@ -35,7 +35,7 @@ export class CardController {
   }
 
   async buscarCartao(request: Request, response: Response) {
-    const cartao = await prisma.card.findFirst({ where: { conta_id: request.params.conta_id } });
+    const cartao = await prisma.card.findFirst({ where: { conta_id: String(request.params.conta_id) } });
     return response.status(200).json(cartao);
   }
 }

@@ -89,7 +89,7 @@ export class TransacaoController {
     try {
       const { numero_conta } = request.params;
 
-      const conta = await prisma.account.findUnique({ where: { numero_conta } });
+      const conta = await prisma.account.findUnique({ where: { numero_conta: String(numero_conta) } });
       if (!conta) return response.status(404).json({ erro: 'Conta bancária não encontrada.' });
 
       const transacoes = await prisma.transaction.findMany({

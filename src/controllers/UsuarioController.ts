@@ -72,7 +72,7 @@ export class UsuarioController {
 
       // Atualiza os dados do usuário no banco
       const usuarioAtualizado = await prisma.user.update({
-        where: { id },
+        where: { id: String(id) },
         data: { nome, email, avatar },
         include: { accounts: true }
       });
