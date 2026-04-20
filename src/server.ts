@@ -12,7 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = 3333;
+const PORT = process.env.PORT || 3333;;
 const server = http.createServer(app);
 
 
