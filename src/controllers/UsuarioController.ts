@@ -39,6 +39,8 @@ export class UsuarioController {
 
       return response.status(201).json({ mensagem: 'Usuário criado com sucesso!', token, usuario: usuarioSemSenha });
     } catch (error) {
+      console.log("DADOS RECEBIDOS DO FRONTEND:", request.body);
+      console.error("ERRO REAL DO PRISMA:", error);      
       return response.status(400).json({ erro: 'Erro ao cadastrar. Verifique se o E-mail ou CPF já existem.' });
     }
   }
